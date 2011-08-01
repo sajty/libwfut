@@ -8,8 +8,6 @@ echo aclocal...
     exit 1
 }
 
-libtoolize --force --copy
-
 aclocal $ACLOCAL_FLAGS
 
 echo autoheader...
@@ -19,6 +17,21 @@ echo autoheader...
 }    
 
 autoheader
+
+echo libtoolize...
+
+if [ "`echo $OSTYPE | grep darwin`" != "" ] ; then
+LIBTOOLIZE="glibtoolize"
+else
+LIBTOOLIZE="libtoolize"
+fi
+
+($LIBTOOLIZE --version) < /dev/null > /dev/null 2>&1 || {
+    echo $LIBTOOLIZE not found
+    exit 1
+}
+
+$LIBTOOLIZE --automake --force --copy
 
 echo automake...
 (automake --version) < /dev/null > /dev/null 2>&1 || {
